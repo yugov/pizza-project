@@ -1,3 +1,5 @@
+import time
+import datetime as dtime
 from django.core.urlresolvers import reverse
 from django.db import transaction
 from django.db.models import Avg, Count, F
@@ -135,4 +137,19 @@ def stats(request):
         }
 
         return render(request, 'pizza_app/stats.html', {'params': params})
+    return HttpResponse(status=405)
+
+
+def status(request, pizza_order_id):
+    if request.method == 'GET':
+        pizza = PizzaOrder.objects.filter(
+            id=pizza_order_id,
+        ).first()
+        print(pizza.date_created)
+        d = dtime.datetime.utcnow()
+        for_js = int(time.mktime(d.timetuple())) * 1000
+        print(for_js)
+        if not pizza:
+            raise Http404
+        return render(request, 'pizza_app/status.html',  {'for_js': for_js})
     return HttpResponse(status=405)
