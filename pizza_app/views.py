@@ -5,7 +5,7 @@ from django.http import HttpResponse, Http404
 from django.shortcuts import render, redirect, get_object_or_404
 from django.utils import timezone
 
-from pizza_app.models import PizzaOrder, PizzaSize
+from pizza_app.models import PizzaOrder, PizzaSize, PizzaMenuItem
 from pizza_app.forms import PizzaOrderForm, DeliveryForm
 
 
@@ -136,3 +136,15 @@ def stats(request):
 
         return render(request, 'pizza_app/stats.html', {'params': params})
     return HttpResponse(status=405)
+
+
+def menu(request):
+
+    if request.method == 'GET':
+        pizzas = PizzaMenuItem.objects.all()
+        if not pizzas:
+            raise Http404
+        return render(request, 'pizza_app/menu.html', {'pizzas': pizzas})
+    return HttpResponse(status=405)
+
+
