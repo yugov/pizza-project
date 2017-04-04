@@ -1,6 +1,6 @@
 from django.conf.urls import url
 
-from pizza_app.views import create, view, close, stats, menu
+from pizza_app.views import create, view, close, stats, menu, history
 
 urlpatterns = [
     url(r'^create/', create, name='create'),
@@ -8,5 +8,6 @@ urlpatterns = [
     url(r'^view/(?P<pizza_order_id>[0-9]+)/', view, name='view'),
     url(r'^close/(?P<pizza_order_id>[0-9]+)/', close, name='close'),
     url(r'^menu/', menu, name='menu'),
+    url(r'^history/', history, name='history'),
     url(r'^stats/', stats, name='stats'),
 ]

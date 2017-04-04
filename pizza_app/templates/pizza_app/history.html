@@ -1,0 +1,20 @@
+{% extends 'pizza_app/_base.html' %}
+
+{% block content %}
+   <h3>HISTORY:</h3>
+
+  <ul>
+
+      {% for pizza in pizzas %}
+
+
+          <li>{{ pizza.kind }}</li>
+          <li>{{ pizza.size }}</li>
+          <li>{{ pizza.order.all }}</li>
+      {% endfor %}
+      </ul>
+
+{% endblock %}
+
+
+

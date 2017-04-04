@@ -148,3 +148,21 @@ def menu(request):
     return HttpResponse(status=405)
 
 
+def history(request):
+
+    if request.method == 'GET':
+        pizzas = PizzaOrder.objects.all()
+        pizzas_size_small_count = PizzaOrder.objects.filter(size__size=PizzaSize.SMALL[0]).count()
+        pizzas_size_medium_count = PizzaOrder.objects.filter(size__size=PizzaSize.MEDIUM[0]).count()
+        pizzas_size_large_count = PizzaOrder.objects.filter(size__size=PizzaSize.LARGE[0]).count()
+
+        print(pizzas_size_small_count, pizzas_size_medium_count, pizzas_size_large_count)
+
+
+
+        if not pizzas:
+            raise Http404
+        return render(request, 'pizza_app/history.html', {'pizzas': pizzas})
+    return HttpResponse(status=405)
+
+
