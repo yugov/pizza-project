@@ -146,8 +146,8 @@ def status(request, pizza_order_id):
             id=pizza_order_id,
         ).first()
         print(pizza.date_created)
-        d = dtime.datetime.utcnow()
-        for_js = int(time.mktime(d.timetuple())) * 1000
+
+        for_js = time.mktime(pizza.date_created.timetuple())
         print(for_js)
         if not pizza:
             raise Http404

@@ -6,10 +6,12 @@
     <meta charset="UTF-8">
     <title>Status</title>
 <script>
+
+
     function megacounter() {
 
         {#var countDate = new Date("Jan 5, 2016 15:37:25").getTime();#}
-        var countDate = {{ for_js }};
+        var countDate = {{ for_js }} * 1000;
 
         var x = setInterval(function () {
 
