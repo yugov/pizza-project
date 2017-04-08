@@ -145,10 +145,7 @@ def status(request, pizza_order_id):
         pizza = PizzaOrder.objects.filter(
             id=pizza_order_id,
         ).first()
-        print(pizza.date_created)
-
         for_js = time.mktime(pizza.date_created.timetuple())
-        print(for_js)
         if not pizza:
             raise Http404
         return render(request, 'pizza_app/status.html',  {'for_js': for_js})
