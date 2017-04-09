@@ -1,3 +1,5 @@
+from collections import OrderedDict
+
 from django.core.urlresolvers import reverse
 from django.db import transaction
 from django.db.models import Avg, Count, F
@@ -149,20 +151,23 @@ def menu(request):
 
 
 def history(request):
-
     if request.method == 'GET':
-        pizzas = PizzaOrder.objects.all()
-        pizzas_size_small_count = PizzaOrder.objects.filter(size__size=PizzaSize.SMALL[0]).count()
-        pizzas_size_medium_count = PizzaOrder.objects.filter(size__size=PizzaSize.MEDIUM[0]).count()
-        pizzas_size_large_count = PizzaOrder.objects.filter(size__size=PizzaSize.LARGE[0]).count()
-
-        print(pizzas_size_small_count, pizzas_size_medium_count, pizzas_size_large_count)
-
-
-
-        if not pizzas:
-            raise Http404
-        return render(request, 'pizza_app/history.html', {'pizzas': pizzas})
+        date_query = PizzaOrder.objects.dates('date_created', 'day')
+        orders_by_date = OrderedDict()
+        for date in date_query:
+            calcs = [
+                PizzaOrder.objects.filter(
+                    date_created__contains=date).count(),
+                PizzaMenuItem.objects.filter(
+                    pizzas__date_created__contains=date).values(
+                    'name').annotate(
+                    num_pizzas=Count('pizzas__id')),
+                PizzaSize.objects.filter(
+                    pizzas__date_created__contains=date).values(
+                    'size').annotate(
+                    num_sizes=Count('pizzas__id')),
+            ]
+            orders_by_date[date] = calcs
+        return render(request, 'pizza_app/history.html',
+                      {'order': orders_by_date})
     return HttpResponse(status=405)
-
-
